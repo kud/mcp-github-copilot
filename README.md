@@ -40,12 +40,8 @@
 
 - Node.js 20+
 - GitHub Copilot subscription
-- GitHub Copilot CLI installed and authenticated
 
-```bash
-gh extension install github/gh-copilot
-gh auth login
-```
+The `@github/copilot` CLI is bundled as a dependency — nothing extra to install. On first run it will open a browser to authenticate automatically, or you can pass a `GITHUB_TOKEN` env var to skip the prompt.
 
 ### Install
 
@@ -308,8 +304,8 @@ This MCP server bridges your AI assistant and GitHub Copilot via the official `@
 
 **Authentication errors**
 
-- Run `gh auth status` to verify you're logged in
-- Run `gh copilot --version` to confirm the extension is available
+- Delete any cached auth state and let the CLI re-authenticate via browser on next run
+- Or set `GITHUB_TOKEN` in your MCP server config to authenticate without a browser prompt
 
 **"Model not found" errors**
 
@@ -325,9 +321,9 @@ npm run inspect
 
 ## Security best practices
 
-- ✅ No API keys to manage — credentials live in your `gh` CLI auth store
+- ✅ No extra API keys — the bundled CLI handles auth via browser OAuth or `GITHUB_TOKEN`
 - ✅ Never commit `.mcp.json` (gitignored by default)
-- ✅ Use `GITHUB_TOKEN` env var if you need to override the logged-in user
+- ✅ Use `GITHUB_TOKEN` in the MCP server env to avoid interactive browser prompts
 
 ---
 
