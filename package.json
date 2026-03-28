@@ -1,6 +1,6 @@
 {
   "name": "@kud/mcp-github-copilot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "MCP server for GitHub Copilot — query any Copilot model programmatically via the official SDK.",
   "main": "dist/index.js",
