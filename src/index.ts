@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
+import type { RequestHandlerExtra } from "@modelcontextprotocol/sdk/shared/protocol.js"
+import type { ServerNotification } from "@modelcontextprotocol/sdk/types.js"
 import { CopilotClient, approveAll } from "@github/copilot-sdk"
 import { z } from "zod"
 
@@ -25,15 +27,18 @@ type Attachment =
   | { type: "file"; path: string; displayName?: string }
   | { type: "blob"; data: string; mimeType: string; displayName?: string }
 
-export const query = async ({
-  prompt,
-  model,
-  attachments,
-}: {
-  prompt: string
-  model?: string
-  attachments?: Attachment[]
-}) => {
+export const query = async (
+  {
+    prompt,
+    model,
+    attachments,
+  }: {
+    prompt: string
+    model?: string
+    attachments?: Attachment[]
+  },
+  extra?: RequestHandlerExtra<never, ServerNotification>,
+) => {
   try {
     const session = await client.createSession({
       ...(model ? { model } : {}),
@@ -41,10 +46,22 @@ export const query = async ({
     })
 
     const chunks: string[] = []
+    let chunkIndex = 0
 
     const result = await new Promise<string>((resolve, reject) => {
       session.on("assistant.message", (event) => {
         chunks.push(event.data.content)
+        if (extra?._meta?.progressToken !== undefined) {
+          extra
+            .sendNotification({
+              method: "notifications/progress",
+              params: {
+                progressToken: extra._meta.progressToken,
+                progress: ++chunkIndex,
+              },
+            })
+            .catch(() => {})
+        }
       })
       session.on("session.idle", () => {
         resolve(chunks.join(""))
