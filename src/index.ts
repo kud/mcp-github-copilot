@@ -21,12 +21,18 @@ export const err = (msg: string) => ({
 
 // ─── Query ───
 
+type Attachment =
+  | { type: "file"; path: string; displayName?: string }
+  | { type: "blob"; data: string; mimeType: string; displayName?: string }
+
 export const query = async ({
   prompt,
   model,
+  attachments,
 }: {
   prompt: string
   model?: string
+  attachments?: Attachment[]
 }) => {
   try {
     const session = await client.createSession({
@@ -46,7 +52,9 @@ export const query = async ({
       session.on("session.error" as never, (event: unknown) => {
         reject(new Error(String(event)))
       })
-      session.send({ prompt }).catch(reject)
+      session
+        .send({ prompt, ...(attachments ? { attachments } : {}) })
+        .catch(reject)
     })
 
     await session.disconnect()
@@ -60,16 +68,8 @@ export const query = async ({
 
 export const listModels = async () => {
   try {
-    const session = await client.createSession({
-      onPermissionRequest: approveAll,
-    })
-    const models = await (
-      session as unknown as { listModels?: () => Promise<unknown> }
-    ).listModels?.()
-    await session.disconnect()
-    return models
-      ? ok(models)
-      : err("listModels not supported by this CLI version")
+    const models = await client.listModels()
+    return ok(models)
   } catch (e) {
     return err(e instanceof Error ? e.message : String(e))
   }
@@ -91,6 +91,24 @@ server.registerTool(
         .describe(
           "Model to use (e.g. gpt-5, gpt-5.3-codex, claude-sonnet-4.5). Defaults to Copilot default.",
         ),
+      attachments: z
+        .array(
+          z.discriminatedUnion("type", [
+            z.object({
+              type: z.literal("file"),
+              path: z.string().describe("Absolute path to the file"),
+              displayName: z.string().optional(),
+            }),
+            z.object({
+              type: z.literal("blob"),
+              data: z.string().describe("Base64-encoded content"),
+              mimeType: z.string().describe("MIME type (e.g. image/png)"),
+              displayName: z.string().optional(),
+            }),
+          ]),
+        )
+        .optional()
+        .describe("File or image attachments to include with the prompt"),
     },
   },
   query,
