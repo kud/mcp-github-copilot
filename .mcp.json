@@ -1,6 +1,8 @@
 {
-  "mcp-github-copilot": {
-    "command": "npx",
-    "args": ["tsx", "src/index.ts"]
+  "mcpServers": {
+    "mcp-github-copilot": {
+      "command": "npx",
+      "args": ["tsx", "src/index.ts"]
+    }
   }
 }
