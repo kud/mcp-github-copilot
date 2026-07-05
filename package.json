@@ -49,6 +49,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "overrides": {
+    "esbuild": "0.28.1"
+  },
   "dependencies": {
     "@github/copilot-sdk": "^0.2.0",
     "@modelcontextprotocol/sdk": "^1.27.1",
