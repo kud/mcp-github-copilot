@@ -5,6 +5,20 @@ import type { RequestHandlerExtra } from "@modelcontextprotocol/sdk/shared/proto
 import type { ServerNotification } from "@modelcontextprotocol/sdk/types.js"
 import { CopilotClient, approveAll } from "@github/copilot-sdk"
 import { z } from "zod"
+import { readFileSync } from "node:fs"
+import { fileURLToPath } from "node:url"
+import { dirname, join } from "node:path"
+
+// Read from package.json rather than repeating the number here. The literal that
+// used to sit in the McpServer call said 1.0.0 while the package was on 1.1.1 —
+// version bumps go through `git lzv`, which touches package.json and nothing else,
+// so a hand-written copy silently rots and every client is told the wrong version.
+const { version } = JSON.parse(
+  readFileSync(
+    join(dirname(fileURLToPath(import.meta.url)), "..", "package.json"),
+    "utf8",
+  ),
+) as { version: string }
 
 const client = new CopilotClient()
 
@@ -92,7 +106,7 @@ export const listModels = async () => {
   }
 }
 
-const server = new McpServer({ name: "mcp-github-copilot", version: "1.0.0" })
+const server = new McpServer({ name: "mcp-github-copilot", version })
 
 // ─── Query ───
 server.registerTool(
