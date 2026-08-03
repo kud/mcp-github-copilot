@@ -50,7 +50,10 @@
     "access": "public"
   },
   "overrides": {
-    "esbuild": "0.28.1"
+    "esbuild": "0.28.1",
+    "fast-uri": "3.1.4",
+    "postcss": "8.5.18",
+    "body-parser": "2.3.0"
   },
   "dependencies": {
     "@github/copilot-sdk": "1.0.8",
