@@ -42,7 +42,7 @@
   "bugs": {
     "url": "https://github.com/kud/mcp-github-copilot/issues"
   },
-  "homepage": "https://github.com/kud/mcp-github-copilot#readme",
+  "homepage": "https://kud.io/projects/mcp-github-copilot",
   "engines": {
     "node": ">=20.0.0"
   },
