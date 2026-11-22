@@ -1,3 +1,6 @@
+> [!WARNING]
+> **No longer maintained.** I no longer use this server, so it is archived and will not receive fixes. Its `query` tool runs a Copilot agent session that approves every tool call on its own (shell, file writes, URL fetches), so anything able to drive your MCP client could use it to act on your machine. Please do not install it; if you already have, remove it from your MCP client configuration.
+
 <div align="center">
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
