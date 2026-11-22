@@ -1,5 +1,7 @@
 > [!WARNING]
 > **No longer maintained.** I no longer use this server, so it is archived and will not receive fixes. Its `query` tool runs a Copilot agent session that approves every tool call on its own (shell, file writes, URL fetches), so anything able to drive your MCP client could use it to act on your machine. Please do not install it; if you already have, remove it from your MCP client configuration.
+>
+> **What I use instead: [mcp-opencode](https://github.com/kud/mcp-opencode).** It drives [opencode](https://opencode.ai) from any MCP client, so you can reach GitHub Copilot's models and many others through one server, with per-instance passwords, a loopback-only server and an optional sandbox.
 
 <div align="center">
 
